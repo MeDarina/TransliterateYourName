@@ -8,9 +8,6 @@ argon2-cffi-bindings==21.2.0
 astor==0.8.1
 attrs==21.2.0
 backcall==0.2.0
-backports==1.0
-backports-zoneinfo==0.2.1
-backports.functools_lru_cache==1.6.4
 base58==2.1.1
 bleach==4.1.0
 blinker==1.4
