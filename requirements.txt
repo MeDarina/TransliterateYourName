@@ -10,7 +10,6 @@ attrs==21.2.0
 backcall==0.2.0
 base58==2.1.1
 bleach==4.1.0
-ca-certificates==2021.10.8
 cachetools==4.2.4
 certifi==2021.10.8
 cffi==1.15.0
