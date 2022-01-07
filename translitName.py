@@ -14,7 +14,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 # disable python warnings
 import sys
 import warnings
-import contextily as cx
+
 
 from folium.features import DivIcon
 import folium
