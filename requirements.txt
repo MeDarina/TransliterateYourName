@@ -106,6 +106,7 @@ six==1.16.0
 smmap==5.0.0
 sniffio==1.2.0
 streamlit==1.2.0
+streamlit-folium==0.4
 terminado==0.12.1
 testpath==0.5.0
 threadpoolctl==3.0.0
