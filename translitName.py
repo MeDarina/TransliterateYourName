@@ -14,6 +14,14 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 # disable python warnings
 import sys
 import warnings
+import contextily as cx
+
+from folium.features import DivIcon
+import folium
+import folium.plugins
+
+from folium.features import *
+from streamlit_folium import folium_static
 
 
 if not sys.warnoptions:
@@ -299,20 +307,67 @@ merge=pd.merge(world,df,on='CODE')
 # merge with data which contains latitude and longitude
 merge=merge.merge(pd.read_csv('countries_latitude_longitude.csv'),on='name')
 
-merge.plot(scheme="quantiles",
-           figsize=(25, 20),
-           legend=True,color=merge['Script'].apply(lambda x: colors_scripts[x]))
-plt.title('Your name all over the world',fontsize=25)
+m = merge.explore(legend=False,tiles='StamenWatercolor', color=merge['Script'].apply(lambda x: colors_scripts[x]),tooltip=['Script'])
 
-# add script names and transliterated script  
+class DivIcon(MacroElement):
+    def __init__(self, html='', size=(30,30), anchor=(0,0), style=''):
+        """TODO : docstring here"""
+        super(DivIcon, self).__init__()
+        self._name = 'DivIcon'
+        self.size = size
+        self.anchor = anchor
+        self.html = html
+        self.style = style
+
+        self._template = Template(u"""
+            {% macro header(this, kwargs) %}
+              <style>
+                .{{this.get_name()}} {
+                    {{this.style}}
+                    }
+              </style>
+            {% endmacro %}
+            {% macro script(this, kwargs) %}
+                var {{this.get_name()}} = L.divIcon({
+                    className: '{{this.get_name()}}',
+                    iconSize: [{{ this.size[0] }},{{ this.size[1] }}],
+                    iconAnchor: [{{ this.anchor[0] }},{{ this.anchor[1] }}],
+                    html : "{{this.html}}",
+                    });
+                {{this._parent.get_name()}}.setIcon({{this.get_name()}});
+            {% endmacro %}
+            """)
 
 for i in range(len(merge)):
   fontpath = str('fonts/'+str(fonts_scripts[merge.Script[i]]))
   if merge.ShowTransliteration[i]==True:
-    plt.text(float(merge.longitude[i]),float(merge.latitude[i]),"{}".format(merge.Script[i]).capitalize(),size=10,fontproperties=fm.FontProperties(fname='fonts/NotoSans-Regular.ttf'))
-    plt.text(float(merge.longitude[i]),float(merge.latitude[i]+2),"{}".format(transliteration_scripts[merge.Script[i]]).capitalize(),size=15,fontproperties=fm.FontProperties(fname=fontpath))
+      folium.map.Marker([float(merge.latitude[i]), float(merge.longitude[i])],icon=DivIcon(
+        size=(150,36),
+        anchor=(150,12),
+        html=transliteration_scripts[merge.Script[i]].capitalize(),
+        style="""
+            font-size:14px;
+            background-color: transparent;
+            border-color: transparent;
+            text-align: right;
+            """
+        )
+    ).add_to(m)
 
 
-plt.show()
+      folium.map.Marker(
+    [float(merge.latitude[i]), float(merge.longitude[i])],
+    icon=DivIcon(
+        size=(150,36),
+        anchor=(150,0),
+        html=merge.Script[i].capitalize(),
+        style="""
+            font-size:10px;
+            background-color: transparent;
+            border-color: transparent;
+            text-align: right;
+            """
+        )
+    ).add_to(m)
 
-st.pyplot(plt)
+folium_static(m)
