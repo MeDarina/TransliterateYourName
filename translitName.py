@@ -62,14 +62,25 @@ sinhala = transliterate_text(user_input, lang_code='si')
 amharic = transliterate_text(user_input, lang_code='am')
 tigrinya = transliterate_text(user_input, lang_code='ti')
 #Aksharamukha
-mongolian= transliterate.process('autodetect', 'Mongolian', user_input)
-devanagari = transliterate.process('autodetect', 'Devanagari', user_input)
-khmer= transliterate.process('autodetect', 'Khmer', user_input)
-lao= transliterate.process('autodetect', 'Lao', user_input)
-burmese= transliterate.process('autodetect', 'Burmese', user_input)
-bengali= transliterate.process('autodetect', 'Bengali', user_input)
-tibetan= transliterate.process('autodetect', 'Tibetan', user_input)
-urdu= transliterate.process('autodetect', 'Urdu', user_input)
+if len(user_input)>0:
+    mongolian= transliterate.process('autodetect', 'Mongolian', user_input)
+    devanagari = transliterate.process('autodetect', 'Devanagari', user_input)
+    khmer= transliterate.process('autodetect', 'Khmer', user_input)
+    lao= transliterate.process('autodetect', 'Lao', user_input)
+    burmese= transliterate.process('autodetect', 'Burmese', user_input)
+    bengali= transliterate.process('autodetect', 'Bengali', user_input)
+    tibetan= transliterate.process('autodetect', 'Tibetan', user_input)
+    urdu= transliterate.process('autodetect', 'Urdu', user_input)
+else:
+    mongolian= " "
+    devanagari = " "
+    khmer= " "
+    lao= " "
+    burmese= " "
+    bengali= " "
+    tibetan= " "
+    urdu= " "
+
 #transliterate 
 georgian = translit(user_input, 'ka')
 armenian = translit(user_input, 'hy')
@@ -184,7 +195,7 @@ name_in_scripts.append(['IND','hindi',True])
 name_in_scripts.append(['BGD','bengali',True])
 name_in_scripts.append(['BTN','tibetan',True])
 name_in_scripts.append(['NPL','devanagari',True])
-name_in_scripts.append(['PAK','urdu',False])
+name_in_scripts.append(['PAK','urdu',True])
 name_in_scripts.append(['AFG','arabic',False])
 name_in_scripts.append(['TJK','cyrillic',False])
 name_in_scripts.append(['KGZ','cyrillic',False])
@@ -408,7 +419,6 @@ m = merge.explore(
     #height=1000,
     #location=[13.406,170.110],
     #zoom_start=1)
-print ('map done')
 
 #create elements
 class DivIcon(MacroElement):
