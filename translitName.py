@@ -6,8 +6,6 @@ import re
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
-import seaborn as sns
-sns.set()
 import datetime as dt
 import geopandas
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -15,14 +13,13 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 import sys
 import warnings
 
-
-from folium.features import DivIcon
 import folium
+#from folium.features import DivIcon
 import folium.plugins
-
 from folium.features import *
 from streamlit_folium import folium_static
-
+from aksharamukha import transliterate
+from transliterate import translit, get_available_language_codes
 
 if not sys.warnoptions:
     warnings.simplefilter("ignore")
@@ -49,7 +46,7 @@ def japanese_rewrite(text):
 #from polyglot.text import Text
 #Text(user_input).transliterate("ar")
 
-
+#google api
 arabic = transliterate_text(user_input, lang_code='ar')
 #chinese = transliterate_text(user_input, lang_code='zh')
 chinese = transliterate_text(user_input, lang_code='zh-hant')
@@ -63,6 +60,21 @@ persian =  transliterate_text(user_input, lang_code='fa')
 greek = transliterate_text(user_input, lang_code='el')
 sinhala = transliterate_text(user_input, lang_code='si')
 amharic = transliterate_text(user_input, lang_code='am')
+tigrinya = transliterate_text(user_input, lang_code='ti')
+#Aksharamukha
+mongolian= transliterate.process('autodetect', 'Mongolian', user_input)
+devanagari = transliterate.process('autodetect', 'Devanagari', user_input)
+khmer= transliterate.process('autodetect', 'Khmer', user_input)
+lao= transliterate.process('autodetect', 'Lao', user_input)
+burmese= transliterate.process('autodetect', 'Burmese', user_input)
+bengali= transliterate.process('autodetect', 'Bengali', user_input)
+tibetan= transliterate.process('autodetect', 'Tibetan', user_input)
+urdu= transliterate.process('autodetect', 'Urdu', user_input)
+#transliterate 
+georgian = translit(user_input, 'ka')
+armenian = translit(user_input, 'hy')
+
+unknown = 'unknown'
 
 latin = user_input
 
@@ -160,26 +172,26 @@ name_in_scripts.append(['KWT','arabic',False])
 name_in_scripts.append(['IRQ','arabic',False])
 name_in_scripts.append(['OMN','arabic',False])
 name_in_scripts.append(['VUT','latin',False])
-#name_in_scripts.append(['KHM','khmer',False])
+name_in_scripts.append(['KHM','khmer',True])
 name_in_scripts.append(['THA','thai',True])
-#name_in_scripts.append(['LAO','lao',False])
-#name_in_scripts.append(['MMR','burmese',False])
+name_in_scripts.append(['LAO','lao',True])
+name_in_scripts.append(['MMR','burmese',True])
 name_in_scripts.append(['VNM','latin',False])
 #name_in_scripts.append(['PRK','hangul',False])
 #name_in_scripts.append(['KOR','hangul',False])
-#name_in_scripts.append(['MNG','mongolian',False])
+name_in_scripts.append(['MNG','mongolian',True])
 name_in_scripts.append(['IND','hindi',True])
-#name_in_scripts.append(['BGD','bengali',False])
-#name_in_scripts.append(['BTN','tibetan',False])
-#name_in_scripts.append(['NPL','devanagari',False])
-#name_in_scripts.append(['PAK','urdu',False])
+name_in_scripts.append(['BGD','bengali',True])
+name_in_scripts.append(['BTN','tibetan',True])
+name_in_scripts.append(['NPL','devanagari',True])
+name_in_scripts.append(['PAK','urdu',False])
 name_in_scripts.append(['AFG','arabic',False])
 name_in_scripts.append(['TJK','cyrillic',False])
 name_in_scripts.append(['KGZ','cyrillic',False])
 name_in_scripts.append(['TKM','latin',False])
 name_in_scripts.append(['IRN','persian',True])
 name_in_scripts.append(['SYR','arabic',False])
-#name_in_scripts.append(['ARM','armenian',False])
+name_in_scripts.append(['ARM','armenian',True])
 name_in_scripts.append(['SWE','latin',False])
 name_in_scripts.append(['BLR','cyrillic',False])
 name_in_scripts.append(['UKR','cyrillic',False])
@@ -216,7 +228,7 @@ name_in_scripts.append(['DNK','latin',False])
 name_in_scripts.append(['GBR','latin',False])
 name_in_scripts.append(['ISL','latin',False])
 name_in_scripts.append(['AZE','latin',False])
-#name_in_scripts.append(['GEO','georgian',False])
+name_in_scripts.append(['GEO','georgian',True])
 name_in_scripts.append(['PHL','latin',False])
 name_in_scripts.append(['MYS','latin',False])
 name_in_scripts.append(['BRN','latin',False])
@@ -224,7 +236,7 @@ name_in_scripts.append(['SVN','latin',False])
 name_in_scripts.append(['FIN','latin',False])
 name_in_scripts.append(['SVK','latin',False])
 name_in_scripts.append(['CZE','latin',False])
-#name_in_scripts.append(['ERI','geez',False])
+name_in_scripts.append(['ERI','tigrinya',True])
 name_in_scripts.append(['JPN','japanese',True])
 name_in_scripts.append(['PRY','latin',False])
 name_in_scripts.append(['YEM','arabic',False])
@@ -244,6 +256,10 @@ name_in_scripts.append(['SRB','cyrillic',False])
 name_in_scripts.append(['MNE','cyrillic',False])
 name_in_scripts.append(['TTO','latin',False])
 name_in_scripts.append(['SSD','latin',False])
+name_in_scripts.append(['FRA','latin',False])
+name_in_scripts.append(['NOR','latin',False])
+name_in_scripts.append(['GL','latin',False])
+name_in_scripts.append(['RKS','latin',False])
 
 colors_scripts = {
    'latin': 'red',
@@ -258,8 +274,21 @@ colors_scripts = {
    'persian': 'azure',
    'greek': 'salmon',
    'sinhala': 'teal',
-   'amharic': 'palegreen'
+   'amharic': 'palegreen',
+   'tigrinya': 'cornflowerblue',
+   'armenian': 'springgreen',
+   'georgian': 'plum',
+   'mongolian': 'deeppink',
+   'devanagari': 'olive',
+   'khmer': 'silver',
+   'lao': 'slateblue',
+   'burmese': 'darkmagenta',
+   'bengali': 'grey',
+   'tibetan': 'rosybrown',
+   'urdu': 'darkgreen',
+   'unknown': 'black'
 }
+
 
 fonts_scripts = {
    'latin': 'NotoSans-Regular.ttf',
@@ -274,8 +303,19 @@ fonts_scripts = {
    'persian': 'Yas.ttf', #https://fontlibrary.org/en/font/yas
    'greek': 'NotoSans-Regular.ttf',
    'sinhala': 'NotoSansSinhala-VariableFont_wdth,wght.ttf',
-   'amharic': 'jiret.ttf', #https://www.lexilogos.com/keyboard/amharic.htm
-   'none':'NotoSans-Regular.ttf'
+   'amharic': 'jiret.ttf', #https://www.lexilogos.com/keyboard/amharic.htm,
+   'tigrinya': 'NotoSans-Regular.ttf',
+   'armenian': 'NotoSans-Regular.ttf',
+   'georgian': 'NotoSans-Regular.ttf',
+   'mongolian':'NotoSans-Regular.ttf',
+   'devanagari': 'NotoSans-Regular.ttf',
+   'khmer': 'NotoSans-Regular.ttf',
+   'lao': 'NotoSans-Regular.ttf',
+   'burmese': 'NotoSans-Regular.ttf',
+   'unknown':'NotoSans-Regular.ttf',
+   'bengali': 'NotoSans-Regular.ttf',
+   'tibetan': 'NotoSans-Regular.ttf',
+   'urdu': 'NotoSans-Regular.ttf',
 }
 
 transliteration_scripts = {
@@ -292,25 +332,88 @@ transliteration_scripts = {
    'greek' : greek,
    'sinhala': sinhala,
    'amharic': amharic,
-   'none': ''
+   'tigrinya': tigrinya,
+   'armenian': armenian,
+   'georgian': georgian,
+   'mongolian': mongolian,
+   'devanagari': devanagari,
+   'khmer':khmer,
+   'lao': lao,
+   'burmese': burmese,
+   'bengali': bengali,
+   'tibetan': tibetan,
+   'urdu': urdu,
+   'unknown': unknown
 }
-
 
 df = pd.DataFrame(name_in_scripts, columns=['CODE','Script','ShowTransliteration'])
 
 # Load the world.shp data 
 world = geopandas.read_file(geopandas.datasets.get_path('naturalearth_lowres'))
+world.loc[world['name'] == 'France', 'iso_a3'] = 'FRA'
+world.loc[world['name'] == 'Norway', 'iso_a3'] = 'NOR' #added Norway to countries_latitude_longitude.csv
+world.loc[world['name'] == 'Greenland', 'iso_a3'] = 'GL' #added Greenland to countries_latitude_longitude.csv
+world.loc[world['name'] == 'Somaliland', 'iso_a3'] = 'SOM'
+world.loc[world['name'] == 'N. Cyprus','iso_a3'] = 'NCY'
+world.loc[world['name'] == 'Kosovo', 'iso_a3'] = 'RKS'
 world.columns=['pop_est', 'continent', 'name', 'CODE', 'gdp_md_est', 'geometry']
 # merge with world.shp data with confirmed cases data and fatalities data
-merge=pd.merge(world,df,on='CODE')
+merge1=pd.merge(world,df,on='CODE')
+
+# merge with country script data
+
+Alphabet_URL = 'https://www.key-shortcut.com/en/writing-systems/world-map-of-alphabets-scripts'
+alpha_df = pd.read_html(Alphabet_URL)[2] # set header with row #0
+alpha_df.drop(['Official language'], axis=1)
+
+#merge on "Country"
+
+def displayAllScripts(script_list):
+    scripts = list(script_list.split(","))
+    return scripts
+
+def displayAllTransliterations(script_list):
+    scripts = list(script_list.split(", "))
+    transliterations = []
+    for script in scripts:
+        if script.lower() in transliteration_scripts:
+            transliterations.append(transliteration_scripts[script.lower()])
+    return transliterations
+
+alpha_df['Writing system2'] = alpha_df['Writing system'].apply(displayAllScripts)
+alpha_df['Transliteration'] = alpha_df['Writing system'].apply(displayAllTransliterations)
+
+
+merge = pd.merge(merge1, alpha_df, left_on='name', right_on='Country', how='left')
 
 # merge with data which contains latitude and longitude
-merge=merge.merge(pd.read_csv('countries_latitude_longitude.csv'),on='name')
+merge=merge.merge(pd.read_csv('countries_improved.csv'),on='name')
 
-m = merge.explore(legend=False,tiles='StamenWatercolor', color=merge['Script'].apply(lambda x: colors_scripts[x]),tooltip=['Script'])
+#Fill possible voids
+merge["Script"][merge["Script"] == "none"] = 'unknown'
 
+
+#Display as folio map
+
+
+
+#create map
+m = merge.explore(
+    legend=False,
+    tiles='StamenWatercolor', 
+    color=merge['Script'].apply(lambda x: colors_scripts[x]),
+    tooltip=['name','Script','Writing system','Transliteration'])
+    #max_bounds=True,
+    #width=500)
+    #height=1000,
+    #location=[13.406,170.110],
+    #zoom_start=1)
+print ('map done')
+
+#create elements
 class DivIcon(MacroElement):
     def __init__(self, html='', size=(30,30), anchor=(0,0), style=''):
+    #def __init__(self, html='', style=''):
         """TODO : docstring here"""
         super(DivIcon, self).__init__()
         self._name = 'DivIcon'
@@ -338,6 +441,7 @@ class DivIcon(MacroElement):
             {% endmacro %}
             """)
 
+#put in Scripts
 for i in range(len(merge)):
   fontpath = str('fonts/'+str(fonts_scripts[merge.Script[i]]))
   if merge.ShowTransliteration[i]==True:
