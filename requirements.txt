@@ -4,13 +4,10 @@
 affine==2.3.0
 aksharamukha==1.9.7
 altair==4.1.0
-appnope @ file:///Users/runner/miniforge3/conda-bld/appnope_1635819647402/work
 argon2-cffi==21.3.0
 argon2-cffi-bindings==21.2.0
 astor==0.8.1
 attrs==21.2.0
-backcall @ file:///home/conda/feedstock_root/build_artifacts/backcall_1592338393461/work
-backports.functools-lru-cache @ file:///home/conda/feedstock_root/build_artifacts/backports.functools_lru_cache_1618230623929/work
 backports.zoneinfo==0.2.1
 base58==2.1.1
 beautifulsoup4==4.10.0
